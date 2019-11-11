@@ -1761,26 +1761,20 @@ library(gmm)</code></pre>
 <p>Estimators</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI29yLCBjYW4gdXNlIHRoZSBlcG9pcyBmdW5jdGlvbiB0byBnZXQgdGhlIGVzdGltYXRlZCBwYXJhbWV0ZXJzIGFuZCBjb25maWRlbmNlIGludGVydmFsc1xuZXBvaXMoeSwgbWV0aG9kID0gXCJtbGVcIilcblxuYGBgIn0= -->
-<pre class="r"><code>#or, can use the epois function to get the estimated parameters and confidence intervals
-epois(y, method = &quot;mle&quot;)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI3BvaXNzb24gbmVnYXRpdmUgbG9nIGxpa2VsaWhvb2QgZnJvbSByYW5kb20gZGlzdHJpYnV0aW9uXG55IDwtIHJwb2lzKDEwMDAsIDI1KVxucG9pc3NuTEwgPC0gZnVuY3Rpb24obGFtYmRhKXtcbiAgLXN1bShkcG9pcyh5LCBsYW1iZGEsIGxvZyA9IFRSVUUpKVxufVxuXG5tbGVQIDwtIG1sZShwb2lzc25MTCwgc3RhcnQgPSBsaXN0KGxhbWJkYSA9IDI1KSwgbm9icyA9IE5ST1coeSkpXG5cbm1sZVBcblxuI29yLCBjYW4gdXNlIHRoZSBlcG9pcyBmdW5jdGlvbiB0byBnZXQgdGhlIGVzdGltYXRlZCBwYXJhbWV0ZXJzIGFuZCBjb25maWRlbmNlIGludGVydmFsc1xuZXBvaXMoeSwgbWV0aG9kID0gXCJtbGVcIilcbmBgYCJ9 -->
+<pre class="r"><code>#poisson negative log likelihood from random distribution
+y &lt;- rpois(1000, 25)
+poissnLL &lt;- function(lambda){
+  -sum(dpois(y, lambda, log = TRUE))
+}
+
+mleP &lt;- mle(poissnLL, start = list(lambda = 25), nobs = NROW(y))
+
+mleP
+
+#or, can use the epois function to get the estimated parameters and confidence intervals
+epois(y, method = &quot;mle&quot;)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5SZXN1bHRzIG9mIERpc3RyaWJ1dGlvbiBQYXJhbWV0ZXIgRXN0aW1hdGlvblxuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cblxuQXNzdW1lZCBEaXN0cmlidXRpb246ICAgICAgICAgICAgUG9pc3NvblxuXG5Fc3RpbWF0ZWQgUGFyYW1ldGVyKHMpOiAgICAgICAgICBsYW1iZGEgPSAyNS4xOTJcblxuRXN0aW1hdGlvbiBNZXRob2Q6ICAgICAgICAgICAgICAgbWxlL21tZS9tdnVlXG5cbkRhdGE6ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHlcblxuU2FtcGxlIFNpemU6ICAgICAgICAgICAgICAgICAgICAgMTAwMFxuIn0= -->
-<pre><code>
-Results of Distribution Parameter Estimation
---------------------------------------------
-
-Assumed Distribution:            Poisson
-
-Estimated Parameter(s):          lambda = 25.192
-
-Estimation Method:               mle/mme/mvue
-
-Data:                            y
-
-Sample Size:                     1000</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
@@ -1837,6 +1831,17 @@ Convergence code =  0 </code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29uZmludChyZXN1bHRzKVxuYGBgIn0= -->
+<pre class="r"><code>confint(results)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5XYWxkIHR5cGUgY29uZmlkZW5jZSBpbnRlcnZhbFxuIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjXG4gICAgIDAuMDI1ICAgIDAuOTc1ICBcbm11ICAgMjQuNzY1NCAgMjUuNDIwM1xuc2lnICAgNC44NTUxICAgNS4zMTcwXG4ifQ== -->
+<pre><code>
+Wald type confidence interval
+#######################################
+     0.025    0.975  
+mu   24.7654  25.4203
+sig   4.8551   5.3170</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
@@ -1845,7 +1850,7 @@ Convergence code =  0 </code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiQlNUIDIyMiBHcm91cCBQcm9qZWN0IgphdXRob3JzOiBOaW5vbiBCZWNxdWFydCAmIEpheSBSb25nCmRhdGU6IE5vdmVtYmVyIDIwMTkKZGVzY3JpcHRpb246IE91ciBncm91cCBwcm9qZWN0IHdpbGwgZm9jdXMgb24gY3JlYXRpbmcgZXN0aW1hdG9ycywgaHlwb3RoZXNpcyB0ZXN0cywgYW5kIGNvbmZpZGVuY2UgaW50ZXJ2YWxzIGZvciBhIFBvaXNzb24gZGlzdHJpYnV0aW9uLgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgpgYGB7ciBsb2FkIGxpYnJhcmllc30KbGlicmFyeShFbnZTdGF0cykKbGlicmFyeShnbW0pCmBgYAoKRXN0aW1hdG9ycwpgYGB7ciBNTEUgZXN0aW1hdG9yfQojcG9pc3NvbiBuZWdhdGl2ZSBsb2cgbGlrZWxpaG9vZCBmcm9tIHJhbmRvbSBkaXN0cmlidXRpb24KeSA8LSBycG9pcygxMDAwLCAyNSkKcG9pc3NuTEwgPC0gZnVuY3Rpb24obGFtYmRhKXsKICAtc3VtKGRwb2lzKHksIGxhbWJkYSwgbG9nID0gVFJVRSkpCn0KCm1sZVAgPC0gbWxlKHBvaXNzbkxMLCBzdGFydCA9IGxpc3QobGFtYmRhID0gMjUpLCBub2JzID0gTlJPVyh5KSkKCm1sZVAKCiNvciwgY2FuIHVzZSB0aGUgZXBvaXMgZnVuY3Rpb24gdG8gZ2V0IHRoZSBlc3RpbWF0ZWQgcGFyYW1ldGVycyBhbmQgY29uZmlkZW5jZSBpbnRlcnZhbHMKZXBvaXMoeSwgbWV0aG9kID0gIm1sZSIpCmBgYAoKYGBge3IgTW9NIGVzdGltYXRvcn0KI1NwZWNpZnlpbmcgYSBmdW5jdGlvbiB0aGF0IHdpbGwgZXF1YXRlIHNhbXBsZSBtb21lbnRzIHRvIHBvcHVsYXRpb24gbW9tZW50c3QKbW1lX2Z1bmN0aW9uIDwtIGZ1bmN0aW9uKHRoZXRhLCB4KXsKICAgbTEgPC0gKHRoZXRhWzFdLXgpCiAgICAgICAgIG0yIDwtICh0aGV0YVsyXV4yIC0gKHggLSB0aGV0YVsxXSleMikKICAgICAgICAgbTMgPC0geF4zLXRoZXRhWzFdKih0aGV0YVsxXV4yKzMqdGhldGFbMl1eMikKICAgICAgICAgZiA8LSBjYmluZChtMSxtMixtMykKICAgICAgICAgcmV0dXJuKGYpIAp9CiN1c2luZyB0aGUgZ21tIGZ1bmN0aW9uIHRvIGNyZWF0ZSBhIG1ldGhvZCBvZiBtb21lbnRzIGVzdGltYXRvciBmb3Igb3VyIHBvaXNzb24gZGlzdHJpYnV0aW9uCnByaW50KHJlc3VsdHMgPC0gZ21tKG1tZV9mdW5jdGlvbiwgeSwgYyhtdSA9IDAsIHNpZyA9IDApKSkKYGBgCgpgYGB7ciAyNS83NSBlc3RpbWF0b3J9CgpgYGAKCkh5cG90aGVzaXMgVGVzdGluZwpgYGB7ciBXYWxkIFRlc3R9CgpgYGAKCmBgYHtyIExpa2VsaWhvb2QgUmF0aW8gVGVzdH0KCmBgYAoKYGBge3IgU2NvcmUgVGVzdH0KCmBgYAoKCkNvbmZpZGVuY2UgSW50ZXJ2YWxzCmBgYHtyIENJIGZyb20gTUxFfQplcG9pcyh5LCBtZXRob2QgPSAibWxlIiwgY2kgPSBUUlVFKQpgYGAKCmBgYHtyfQoKYGBgCgpgYGB7cn0KCmBgYAoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiQlNUIDIyMiBHcm91cCBQcm9qZWN0IgphdXRob3JzOiBOaW5vbiBCZWNxdWFydCAmIEpheSBSb25nCmRhdGU6IE5vdmVtYmVyIDIwMTkKZGVzY3JpcHRpb246IE91ciBncm91cCBwcm9qZWN0IHdpbGwgZm9jdXMgb24gY3JlYXRpbmcgZXN0aW1hdG9ycywgaHlwb3RoZXNpcyB0ZXN0cywgYW5kIGNvbmZpZGVuY2UgaW50ZXJ2YWxzIGZvciBhIFBvaXNzb24gZGlzdHJpYnV0aW9uLgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgpgYGB7ciBsb2FkIGxpYnJhcmllc30KbGlicmFyeShFbnZTdGF0cykKbGlicmFyeShnbW0pCmBgYAoKRXN0aW1hdG9ycwpgYGB7ciBNTEUgZXN0aW1hdG9yfQojcG9pc3NvbiBuZWdhdGl2ZSBsb2cgbGlrZWxpaG9vZCBmcm9tIHJhbmRvbSBkaXN0cmlidXRpb24KeSA8LSBycG9pcygxMDAwLCAyNSkKcG9pc3NuTEwgPC0gZnVuY3Rpb24obGFtYmRhKXsKICAtc3VtKGRwb2lzKHksIGxhbWJkYSwgbG9nID0gVFJVRSkpCn0KCm1sZVAgPC0gbWxlKHBvaXNzbkxMLCBzdGFydCA9IGxpc3QobGFtYmRhID0gMjUpLCBub2JzID0gTlJPVyh5KSkKCm1sZVAKCiNvciwgY2FuIHVzZSB0aGUgZXBvaXMgZnVuY3Rpb24gdG8gZ2V0IHRoZSBlc3RpbWF0ZWQgcGFyYW1ldGVycyBhbmQgY29uZmlkZW5jZSBpbnRlcnZhbHMKZXBvaXMoeSwgbWV0aG9kID0gIm1sZSIpCmBgYAoKYGBge3IgTW9NIGVzdGltYXRvcn0KI1NwZWNpZnlpbmcgYSBmdW5jdGlvbiB0aGF0IHdpbGwgZXF1YXRlIHNhbXBsZSBtb21lbnRzIHRvIHBvcHVsYXRpb24gbW9tZW50c3QKbW1lX2Z1bmN0aW9uIDwtIGZ1bmN0aW9uKHRoZXRhLCB4KXsKICAgbTEgPC0gKHRoZXRhWzFdLXgpCiAgICAgICAgIG0yIDwtICh0aGV0YVsyXV4yIC0gKHggLSB0aGV0YVsxXSleMikKICAgICAgICAgbTMgPC0geF4zLXRoZXRhWzFdKih0aGV0YVsxXV4yKzMqdGhldGFbMl1eMikKICAgICAgICAgZiA8LSBjYmluZChtMSxtMixtMykKICAgICAgICAgcmV0dXJuKGYpIAp9CiN1c2luZyB0aGUgZ21tIGZ1bmN0aW9uIHRvIGNyZWF0ZSBhIG1ldGhvZCBvZiBtb21lbnRzIGVzdGltYXRvciBmb3Igb3VyIHBvaXNzb24gZGlzdHJpYnV0aW9uCnByaW50KHJlc3VsdHMgPC0gZ21tKG1tZV9mdW5jdGlvbiwgeSwgYyhtdSA9IDAsIHNpZyA9IDApKSkKYGBgCgpgYGB7ciAyNS83NSBlc3RpbWF0b3J9CgpgYGAKCkh5cG90aGVzaXMgVGVzdGluZwpgYGB7ciBXYWxkIFRlc3R9CgpgYGAKCmBgYHtyIExpa2VsaWhvb2QgUmF0aW8gVGVzdH0KCmBgYAoKYGBge3IgU2NvcmUgVGVzdH0KCmBgYAoKCkNvbmZpZGVuY2UgSW50ZXJ2YWxzCmBgYHtyIENJIGZyb20gTWF4aW11bSBMaWtlbGlob29kIEVzdGltYXRvcn0KZXBvaXMoeSwgbWV0aG9kID0gIm1sZSIsIGNpID0gVFJVRSkKYGBgCgpgYGB7ciBDSSBmcm9tIE1ldGhvZCBvZiBNb21lbnRzfQpjb25maW50KHJlc3VsdHMpCmBgYAoKYGBge3J9CgpgYGAKCg==</div>
 
 
 

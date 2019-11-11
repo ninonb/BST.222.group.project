@@ -59,12 +59,12 @@ Hypothesis Testing
 
 
 Confidence Intervals
-```{r CI from MLE}
+```{r CI from Maximum Likelihood Estimator}
 epois(y, method = "mle", ci = TRUE)
 ```
 
-```{r}
-
+```{r CI from Method of Moments}
+confint(results)
 ```
 
 ```{r}
