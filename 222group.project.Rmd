@@ -24,7 +24,7 @@ mleP <- mle(poissnLL, start = list(lambda = 25), nobs = NROW(y))
 mleP
 
 #or, can use the epois function to get the estimated parameters and confidence intervals
-epois(y, method = "mle", ci = TRUE)
+epois(y, method = "mle")
 ```
 
 ```{r MoM estimator}
@@ -59,8 +59,8 @@ Hypothesis Testing
 
 
 Confidence Intervals
-```{r }
-
+```{r CI from MLE}
+epois(y, method = "mle", ci = TRUE)
 ```
 
 ```{r}
