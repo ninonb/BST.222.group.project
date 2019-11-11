@@ -1,0 +1,44 @@
+---
+title: "BST 222 Group Project"
+authors: Ninon Becquart
+description: Our group project will focus on creating estimators, hypothesis tests, and confidence intervals for a Poisson distribution.
+output: html_notebook
+---
+
+```{r load libraries}
+library(EnvStats)
+library(gmm)
+```
+
+```{r MLE estimator}
+#poisson negative log likelihood from random distribution
+y <- rpois(1000, 25)
+poissnLL <- function(lambda){
+  -sum(dpois(y, lambda, log = TRUE))
+}
+
+mleP <- mle(poissnLL, start = list(lambda = 25), nobs = NROW(y))
+
+mleP
+
+#or, can use the epois function to get the estimated parameters and confidence intervals
+epois(y, method = "mle", ci = TRUE)
+```
+
+```{r MoM estimator}
+#Specifying a function that will equate sample moments to population momentst
+mme_function <- function(theta, x){
+   m1 <- (theta[1]-x)
+         m2 <- (theta[2]^2 - (x - theta[1])^2)
+         m3 <- x^3-theta[1]*(theta[1]^2+3*theta[2]^2)
+         f <- cbind(m1,m2,m3)
+         return(f) 
+}
+#using the gmm function to create a method of moments estimator for our poisson distribution
+print(results <- gmm(mme_function, y, c(mu = 0, sig = 0)))
+```
+
+```{r 25/75 estimator}
+
+```
+
