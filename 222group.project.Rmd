@@ -1,6 +1,7 @@
 ---
 title: "BST 222 Group Project"
-authors: Ninon Becquart
+authors: Ninon Becquart & Jay Rong
+date: November 2019
 description: Our group project will focus on creating estimators, hypothesis tests, and confidence intervals for a Poisson distribution.
 output: html_notebook
 ---

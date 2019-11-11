@@ -1744,6 +1744,7 @@ summary {
 
 
 <h1 class="title toc-ignore">BST 222 Group Project</h1>
+<h4 class="date">November 2019</h4>
 
 </div>
 
@@ -1751,13 +1752,10 @@ summary {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShnbW0pXG5cbmBgYCJ9 -->
-<pre class="r"><code>library(gmm)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShFbnZTdGF0cylcbmxpYnJhcnkoZ21tKVxuYGBgIn0= -->
+<pre class="r"><code>library(EnvStats)
+library(gmm)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBzYW5kd2ljaFxuIn0= -->
-<pre><code>Loading required package: sandwich</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
@@ -1797,21 +1795,18 @@ Confidence Interval:             LCL = 24.83416
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQocmVzdWx0cyA8LSBnbW0obW1lX2Z1bmN0aW9uLCB5LCBjKG11ID0gMCwgc2lnID0gMCkpKVxuXG5gYGAifQ== -->
-<pre class="r"><code>print(results &lt;- gmm(mme_function, y, c(mu = 0, sig = 0)))
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI1NwZWNpZnlpbmcgYSBmdW5jdGlvbiB0aGF0IHdpbGwgZXF1YXRlIHNhbXBsZSBtb21lbnRzIHRvIHBvcHVsYXRpb24gbW9tZW50c3Rcbm1tZV9mdW5jdGlvbiA8LSBmdW5jdGlvbih0aGV0YSwgeCl7XG4gICBtMSA8LSAodGhldGFbMV0teClcbiAgICAgICAgIG0yIDwtICh0aGV0YVsyXV4yIC0gKHggLSB0aGV0YVsxXSleMilcbiAgICAgICAgIG0zIDwtIHheMy10aGV0YVsxXSoodGhldGFbMV1eMiszKnRoZXRhWzJdXjIpXG4gICAgICAgICBmIDwtIGNiaW5kKG0xLG0yLG0zKVxuICAgICAgICAgcmV0dXJuKGYpIFxufVxuI3VzaW5nIHRoZSBnbW0gZnVuY3Rpb24gdG8gY3JlYXRlIGEgbWV0aG9kIG9mIG1vbWVudHMgZXN0aW1hdG9yIGZvciBvdXIgcG9pc3NvbiBkaXN0cmlidXRpb25cbnByaW50KHJlc3VsdHMgPC0gZ21tKG1tZV9mdW5jdGlvbiwgeSwgYyhtdSA9IDAsIHNpZyA9IDApKSlcbmBgYCJ9 -->
+<pre class="r"><code>#Specifying a function that will equate sample moments to population momentst
+mme_function &lt;- function(theta, x){
+   m1 &lt;- (theta[1]-x)
+         m2 &lt;- (theta[2]^2 - (x - theta[1])^2)
+         m3 &lt;- x^3-theta[1]*(theta[1]^2+3*theta[2]^2)
+         f &lt;- cbind(m1,m2,m3)
+         return(f) 
+}
+#using the gmm function to create a method of moments estimator for our poisson distribution
+print(results &lt;- gmm(mme_function, y, c(mu = 0, sig = 0)))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiTWV0aG9kXG4gdHdvU3RlcCBcblxuT2JqZWN0aXZlIGZ1bmN0aW9uIHZhbHVlOiAgMC4wMDQwNjc1NzMgXG5cbiAgICAgbXUgICAgICBzaWcgIFxuMjUuMDY0MCAgIDQuODM4MiAgXG5cbkNvbnZlcmdlbmNlIGNvZGUgPSAgMCBcbiJ9 -->
-<pre><code>Method
- twoStep 
-
-Objective function value:  0.004067573 
-
-     mu      sig  
-25.0640   4.8382  
-
-Convergence code =  0 </code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
@@ -1820,7 +1815,7 @@ Convergence code =  0 </code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiQlNUIDIyMiBHcm91cCBQcm9qZWN0IgphdXRob3JzOiBOaW5vbiBCZWNxdWFydApkZXNjcmlwdGlvbjogT3VyIGdyb3VwIHByb2plY3Qgd2lsbCBmb2N1cyBvbiBjcmVhdGluZyBlc3RpbWF0b3JzLCBoeXBvdGhlc2lzIHRlc3RzLCBhbmQgY29uZmlkZW5jZSBpbnRlcnZhbHMgZm9yIGEgUG9pc3NvbiBkaXN0cmlidXRpb24uCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCmBgYHtyIGxvYWQgbGlicmFyaWVzfQpsaWJyYXJ5KEVudlN0YXRzKQpsaWJyYXJ5KGdtbSkKYGBgCgpgYGB7ciBNTEUgZXN0aW1hdG9yfQojcG9pc3NvbiBuZWdhdGl2ZSBsb2cgbGlrZWxpaG9vZCBmcm9tIHJhbmRvbSBkaXN0cmlidXRpb24KeSA8LSBycG9pcygxMDAwLCAyNSkKcG9pc3NuTEwgPC0gZnVuY3Rpb24obGFtYmRhKXsKICAtc3VtKGRwb2lzKHksIGxhbWJkYSwgbG9nID0gVFJVRSkpCn0KCm1sZVAgPC0gbWxlKHBvaXNzbkxMLCBzdGFydCA9IGxpc3QobGFtYmRhID0gMjUpLCBub2JzID0gTlJPVyh5KSkKCm1sZVAKCiNvciwgY2FuIHVzZSB0aGUgZXBvaXMgZnVuY3Rpb24gdG8gZ2V0IHRoZSBlc3RpbWF0ZWQgcGFyYW1ldGVycyBhbmQgY29uZmlkZW5jZSBpbnRlcnZhbHMKZXBvaXMoeSwgbWV0aG9kID0gIm1sZSIsIGNpID0gVFJVRSkKYGBgCgpgYGB7ciBNb00gZXN0aW1hdG9yfQojU3BlY2lmeWluZyBhIGZ1bmN0aW9uIHRoYXQgd2lsbCBlcXVhdGUgc2FtcGxlIG1vbWVudHMgdG8gcG9wdWxhdGlvbiBtb21lbnRzdAptbWVfZnVuY3Rpb24gPC0gZnVuY3Rpb24odGhldGEsIHgpewogICBtMSA8LSAodGhldGFbMV0teCkKICAgICAgICAgbTIgPC0gKHRoZXRhWzJdXjIgLSAoeCAtIHRoZXRhWzFdKV4yKQogICAgICAgICBtMyA8LSB4XjMtdGhldGFbMV0qKHRoZXRhWzFdXjIrMyp0aGV0YVsyXV4yKQogICAgICAgICBmIDwtIGNiaW5kKG0xLG0yLG0zKQogICAgICAgICByZXR1cm4oZikgCn0KI3VzaW5nIHRoZSBnbW0gZnVuY3Rpb24gdG8gY3JlYXRlIGEgbWV0aG9kIG9mIG1vbWVudHMgZXN0aW1hdG9yIGZvciBvdXIgcG9pc3NvbiBkaXN0cmlidXRpb24KcHJpbnQocmVzdWx0cyA8LSBnbW0obW1lX2Z1bmN0aW9uLCB5LCBjKG11ID0gMCwgc2lnID0gMCkpKQpgYGAKCmBgYHtyIDI1Lzc1IGVzdGltYXRvcn0KCmBgYAoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiQlNUIDIyMiBHcm91cCBQcm9qZWN0IgphdXRob3JzOiBOaW5vbiBCZWNxdWFydCAmIEpheSBSb25nCmRhdGU6IE5vdmVtYmVyIDIwMTkKZGVzY3JpcHRpb246IE91ciBncm91cCBwcm9qZWN0IHdpbGwgZm9jdXMgb24gY3JlYXRpbmcgZXN0aW1hdG9ycywgaHlwb3RoZXNpcyB0ZXN0cywgYW5kIGNvbmZpZGVuY2UgaW50ZXJ2YWxzIGZvciBhIFBvaXNzb24gZGlzdHJpYnV0aW9uLgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgpgYGB7ciBsb2FkIGxpYnJhcmllc30KbGlicmFyeShFbnZTdGF0cykKbGlicmFyeShnbW0pCmBgYAoKYGBge3IgTUxFIGVzdGltYXRvcn0KI3BvaXNzb24gbmVnYXRpdmUgbG9nIGxpa2VsaWhvb2QgZnJvbSByYW5kb20gZGlzdHJpYnV0aW9uCnkgPC0gcnBvaXMoMTAwMCwgMjUpCnBvaXNzbkxMIDwtIGZ1bmN0aW9uKGxhbWJkYSl7CiAgLXN1bShkcG9pcyh5LCBsYW1iZGEsIGxvZyA9IFRSVUUpKQp9CgptbGVQIDwtIG1sZShwb2lzc25MTCwgc3RhcnQgPSBsaXN0KGxhbWJkYSA9IDI1KSwgbm9icyA9IE5ST1coeSkpCgptbGVQCgojb3IsIGNhbiB1c2UgdGhlIGVwb2lzIGZ1bmN0aW9uIHRvIGdldCB0aGUgZXN0aW1hdGVkIHBhcmFtZXRlcnMgYW5kIGNvbmZpZGVuY2UgaW50ZXJ2YWxzCmVwb2lzKHksIG1ldGhvZCA9ICJtbGUiLCBjaSA9IFRSVUUpCmBgYAoKYGBge3IgTW9NIGVzdGltYXRvcn0KI1NwZWNpZnlpbmcgYSBmdW5jdGlvbiB0aGF0IHdpbGwgZXF1YXRlIHNhbXBsZSBtb21lbnRzIHRvIHBvcHVsYXRpb24gbW9tZW50c3QKbW1lX2Z1bmN0aW9uIDwtIGZ1bmN0aW9uKHRoZXRhLCB4KXsKICAgbTEgPC0gKHRoZXRhWzFdLXgpCiAgICAgICAgIG0yIDwtICh0aGV0YVsyXV4yIC0gKHggLSB0aGV0YVsxXSleMikKICAgICAgICAgbTMgPC0geF4zLXRoZXRhWzFdKih0aGV0YVsxXV4yKzMqdGhldGFbMl1eMikKICAgICAgICAgZiA8LSBjYmluZChtMSxtMixtMykKICAgICAgICAgcmV0dXJuKGYpIAp9CiN1c2luZyB0aGUgZ21tIGZ1bmN0aW9uIHRvIGNyZWF0ZSBhIG1ldGhvZCBvZiBtb21lbnRzIGVzdGltYXRvciBmb3Igb3VyIHBvaXNzb24gZGlzdHJpYnV0aW9uCnByaW50KHJlc3VsdHMgPC0gZ21tKG1tZV9mdW5jdGlvbiwgeSwgYyhtdSA9IDAsIHNpZyA9IDApKSkKYGBgCgpgYGB7ciAyNS83NSBlc3RpbWF0b3J9CgpgYGAKCg==</div>
 
 
 
