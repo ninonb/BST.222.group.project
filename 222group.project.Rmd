@@ -2,61 +2,78 @@
 title: "BST 222 Group Project"
 authors: Ninon Becquart & Jay Rong
 date: November 2019
-description: Our group project will focus on creating estimators, hypothesis tests, and confidence intervals for a Poisson distribution.
+description: Our group project will focus on creating estimators and confidence intervals for a Poisson distribution.
 output: html_notebook
 ---
 
 ```{r load libraries}
 library(EnvStats)
 library(gmm)
+library(VGAM)
+library(dplyr)
+library(ggplot2)
 ```
 
 Estimators
 ```{r MLE estimator}
-#poisson negative log likelihood from random distribution
-y <- rpois(1000, 25)
-poissnLL <- function(lambda){
-  -sum(dpois(y, lambda, log = TRUE))
+
+MLEfunction <- function(n, lambda){
+  #poisson negative log likelihood from random distribution
+  y <- rpois(n, lambda = lambda)
+  
+  poissnLL <- function(lambda){
+    -sum(dpois(y, lambda, log = TRUE))
+  }
+  mleP <- mle(poissnLL, start = list(lambda = lambda), nobs = NROW(y))
+  #or, can use the epois function to get the estimated parameters and confidence intervals
+  # results2 <- epois(y, method = "mle")
 }
 
-mleP <- mle(poissnLL, start = list(lambda = 25), nobs = NROW(y))
+#Lambda 25 graph
+nList <- seq(5, 1000, 5)
+pred_df <- NULL
+actual_df <- NULL
+MSElist <- NULL
+n <- NULL
+lambda <- 25
 
-mleP
+for(i in 1:length(nList)){
+  mleP <- MLEfunction(i, lambda)
+  pred <- mleP@coef[["lambda"]]
+  actual <- lambda
+  pred_df <- rbind(pred_df, pred)
+  actual_df <- rbind(actual_df, actual)
+  n <- rbind(n, nList[i])
+  MSE <- ((actual_df[i]-pred_df[i])^2)/nList[i]
+  MSElist <- rbind(MSElist, MSE)
+  list <- data.frame(cbind(pred_df, actual_df, n, MSElist))
+}
 
-#or, can use the epois function to get the estimated parameters and confidence intervals
-epois(y, method = "mle")
+list%>%
+  ggplot() +
+  geom_line(aes(X3, X4)) +
+  xlab("n") +
+  ylab("mean squared error") +
+  ggtitle("MLE estimator for Poisson distribution")
 ```
 
-```{r MoM estimator}
+```{r MoM estimator (using the third moment)}
 #Specifying a function that will equate sample moments to population momentst
 mme_function <- function(theta, x){
    m1 <- (theta[1]-x)
-         m2 <- (theta[2]^2 - (x - theta[1])^2)
-         m3 <- x^3-theta[1]*(theta[1]^2+3*theta[2]^2)
-         f <- cbind(m1,m2,m3)
-         return(f) 
+   m2 <- (theta[2]^2 - (x - theta[1])^2)
+   m3 <- x^3-theta[1]*(theta[1]^2+3*theta[2]^2)
+   f <- cbind(m1,m2,m3)
+   return(f) 
 }
 #using the gmm function to create a method of moments estimator for our poisson distribution
-print(results <- gmm(mme_function, y, c(mu = 0, sig = 0)))
+mom <- summary(results <- gmm(mme_function, y, c(mu = 0, sig = 0)))
+
 ```
 
 ```{r 25/75 estimator}
 
 ```
-
-Hypothesis Testing
-```{r Wald Test}
-
-```
-
-```{r Likelihood Ratio Test}
-
-```
-
-```{r Score Test}
-
-```
-
 
 Confidence Intervals
 ```{r CI from Maximum Likelihood Estimator}
@@ -67,7 +84,25 @@ epois(y, method = "mle", ci = TRUE)
 confint(results)
 ```
 
-```{r}
+```{r CI from percentile estimator}
+lambda = 25
 
+poistest = function (x) {
+  (lambda^x)*exp(-lambda)/(factorial(x))
+}
+
+f1 = poistest(q1)
+f2 = poistest(q2)
+
+
+N=1000
+
+v1 = f1^(-2) * .25* (1-.25) / N
+v2 = f2^(-2) * .75* (1-.75) / N
+
+v1
+v2
+var.pe = (1/4) * (v1 + v2)
+var.pe
 ```
 
